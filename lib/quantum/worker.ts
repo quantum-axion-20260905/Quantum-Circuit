@@ -1,5 +1,8 @@
-import { QuantumState, Gate } from "./simulator";
+import { QuantumState } from "./simulator";
+import type { Gate } from "./simulator";
 import { calculateEntropyForCut } from "./entropy";
+import { calculateCircuitMetrics, calculatePressureScore } from "./analysis";
+import type { CircuitMetrics } from "./analysis";
 
 export type SimulationRequest = {
     numQubits: number;
@@ -9,8 +12,9 @@ export type SimulationRequest = {
 export type SimulationResponse = {
     entropies: number[][]; // [step][cut]
     peakEntropy: number;
-    hardnessScore: number;
+    pressureScore: number;
     amplitudes: Float64Array; // final state
+    metrics: CircuitMetrics;
 };
 
 self.onmessage = (e: MessageEvent<SimulationRequest>) => {
@@ -35,18 +39,14 @@ self.onmessage = (e: MessageEvent<SimulationRequest>) => {
         entropies.push(stepEntropies);
     }
 
-    // Heuristic hardness score (0 to 100)
-    // Based on peak entropy, 2-qubit gate count, and total depth
-    const twoQubitGates = gates.filter(g => g.targets.length > 1 || (g.controls && g.controls.length > 0)).length;
-    // Non-rigorous heuristic
-    const hardness = Math.min(100, Math.round(
-        (peakEntropy * 15) + (twoQubitGates * 2) + Math.sqrt(gates.length) * 5
-    ));
+    const metrics = calculateCircuitMetrics(gates, entropies, numQubits);
+    const pressure = calculatePressureScore(metrics);
 
     self.postMessage({
         entropies,
         peakEntropy,
-        hardnessScore: hardness,
-        amplitudes: state.amplitudes
+        pressureScore: pressure,
+        amplitudes: state.amplitudes,
+        metrics,
     } as SimulationResponse);
 };

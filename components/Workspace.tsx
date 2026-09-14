@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Gate, GateType } from '../lib/quantum/simulator';
 import type { SimulationRequest, SimulationResponse } from '../lib/quantum/worker';
+import { parseCircuit } from '../lib/quantum/parser';
+import type { ParseDiagnostic } from '../lib/quantum/parser';
 
 export default function Workspace() {
     const [numQubits, setNumQubits] = useState(5);
@@ -10,6 +11,7 @@ export default function Workspace() {
     const [showCode, setShowCode] = useState<boolean>(false);
     const [results, setResults] = useState<SimulationResponse | null>(null);
     const [isComputing, setIsComputing] = useState(false);
+    const [workerError, setWorkerError] = useState<string | null>(null);
 
     const workerRef = useRef<Worker | null>(null);
 
@@ -20,58 +22,54 @@ export default function Workspace() {
             setResults(e.data);
             setIsComputing(false);
         };
+        workerRef.current.onerror = () => {
+            setWorkerError('Simulation failed. Check the circuit and try again.');
+            setIsComputing(false);
+        };
         return () => {
             workerRef.current?.terminate();
         };
     }, []);
 
-    // Parse pseudo code into Gates whenever code changes
-    const gates = React.useMemo(() => {
-        const parsedGates: Gate[] = [];
-        const lines = code.split('\n');
-        for (const line of lines) {
-            let l = line.trim();
-            // Basic OpenQASM skip
-            if (l.toLowerCase().startsWith('openqasm') || l.toLowerCase().startsWith('include') || l.toLowerCase().startsWith('qreg') || l.toLowerCase().startsWith('creg')) continue;
-            // Clean semicolons and brackets for basic QASM support
-            l = l.replace(/;/g, '').replace(/q\[(\d+)\]/g, '$1');
-
-            const parts = l.split(/[\s,]+/).filter(Boolean);
-            if (parts.length < 2) continue;
-            const op = parts[0].toUpperCase() as GateType;
-
-            try {
-                if (op === 'CX' || op === 'CZ') {
-                    if (parts.length >= 3) {
-                        const c = parseInt(parts[1].replace(/\D/g, ''));
-                        const t = parseInt(parts[2].replace(/\D/g, ''));
-                        parsedGates.push({ type: op, targets: [t], controls: [c] });
-                    }
-                } else if (op === 'RX' || op === 'RY' || op === 'RZ') {
-                    if (parts.length >= 3) {
-                        const t = parseInt(parts[1].replace(/\D/g, ''));
-                        let p = parseFloat(parts[2]);
-                        if (parts[2].includes('PI')) p = Math.PI * (parseFloat(parts[2].replace('PI', '')) || 1);
-                        parsedGates.push({ type: op, targets: [t], param: p });
-                    }
-                } else if ((Object.values(GateType) as string[]).includes(op)) {
-                    const t = parseInt(parts[1].replace(/\D/g, ''));
-                    parsedGates.push({ type: op, targets: [t] });
-                }
-            } catch {
-                // ignore parsing errors and move on
-            }
-        }
-        return parsedGates;
-    }, [code]);
+    const parsedCircuit = React.useMemo(() => parseCircuit(code, numQubits), [code, numQubits]);
+    const gates = parsedCircuit.gates;
+    const diagnostics = parsedCircuit.diagnostics;
 
     useEffect(() => {
         if (workerRef.current) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsComputing(true);
+            setWorkerError(null);
             workerRef.current.postMessage({ numQubits, gates } as SimulationRequest);
         }
     }, [gates, numQubits]);
+
+    const exportReport = () => {
+        if (!results) return;
+        const report = {
+            format: 'ket-profiler-report/v1',
+            generatedAt: new Date().toISOString(),
+            numQubits,
+            source: code,
+            gates,
+            diagnostics,
+            metrics: results.metrics,
+            pressureScore: results.pressureScore,
+            entropies: results.entropies,
+            finalStateProbabilities: Array.from({ length: 1 << numQubits }, (_, index) => {
+                const real = results.amplitudes[index * 2] ?? 0;
+                const imaginary = results.amplitudes[index * 2 + 1] ?? 0;
+                return real * real + imaginary * imaginary;
+            }),
+        };
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'ket-profiler-report.json';
+        anchor.click();
+        URL.revokeObjectURL(url);
+    };
 
     const loadTemplate = (name: string) => {
         if (name === 'GHZ') {
@@ -153,6 +151,18 @@ export default function Workspace() {
                     <button className="btn" onClick={clearCircuit} style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}>Clear</button>
                 </div>
 
+                {diagnostics.length > 0 && (
+                    <div className="diagnostics-panel" role="status" aria-live="polite">
+                        <div className="diagnostics-title">Input diagnostics</div>
+                        {diagnostics.map((diagnostic: ParseDiagnostic, index) => (
+                            <div key={`${diagnostic.line}-${index}`} className={`diagnostic diagnostic-${diagnostic.severity}`}>
+                                <span>Line {diagnostic.line}</span>
+                                <span>{diagnostic.message}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 {numQubits >= 10 && (
                     <div style={{ marginBottom: '1rem', padding: '0.75rem', borderRadius: '8px', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.2)', color: '#eab308', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
@@ -177,6 +187,7 @@ export default function Workspace() {
                     )}
 
                     <div className="circuit-grid" style={{ flex: 1, border: '1px solid var(--border-light)', borderRadius: '8px', padding: '1rem', minHeight: '200px' }}>
+                        {gates.length === 0 && <div className="empty-circuit">Load an example or enter a gate sequence to begin profiling.</div>}
                         {Array.from({ length: numQubits }).map((_, qIndex) => (
                             <div key={qIndex} className="circuit-wire">
                                 <div className="wire-label">q[{qIndex}]</div>
@@ -221,16 +232,39 @@ export default function Workspace() {
                     </div>
                 ) : results ? (
                     <div className="animate-fade">
+                        <div className="metrics-toolbar">
+                            <span className="result-status">Analysis complete · {results.metrics.totalGates} gates</span>
+                            <button className="btn" onClick={exportReport}>Export JSON report</button>
+                        </div>
+
+                        <div className="metric-summary-grid">
+                            <div className="metric-card compact-card">
+                                <div className="metric-header">Estimated depth</div>
+                                <div className="metric-value compact-value">{results.metrics.depth}</div>
+                                <div className="metric-help">parallel moments</div>
+                            </div>
+                            <div className="metric-card compact-card">
+                                <div className="metric-header">Entangling gates</div>
+                                <div className="metric-value compact-value">{results.metrics.twoQubitGates}</div>
+                                <div className="metric-help">{(results.metrics.twoQubitDensity * 100).toFixed(0)}% of gates</div>
+                            </div>
+                            <div className="metric-card compact-card">
+                                <div className="metric-header">Peak cut</div>
+                                <div className="metric-value compact-value">{results.metrics.peakCut ? `${results.metrics.peakCut}|${numQubits - results.metrics.peakCut}` : '—'}</div>
+                                <div className="metric-help">step {results.metrics.peakStep || '—'}</div>
+                            </div>
+                        </div>
+
                         <div className="metric-card">
-                            <div className="metric-header">Heuristic Hardness Score</div>
+                            <div className="metric-header">Complexity Pressure (heuristic)</div>
                             <div className="metric-value">
-                                {results.hardnessScore} <span>/ 100</span>
+                                {results.pressureScore} <span>/ 100</span>
                             </div>
                             <div className="hardness-bar">
-                                <div className="hardness-fill" style={{ width: `${results.hardnessScore}%` }}></div>
+                                <div className="hardness-fill" style={{ width: `${results.pressureScore}%` }}></div>
                             </div>
                             <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                Estimates classical simulation difficulty based on entanglement growth and multi-qubit gates.
+                                A bounded comparison indicator based on normalized entanglement, entangling-gate density, and depth. It is not a runtime prediction.
                             </p>
                         </div>
 
@@ -243,30 +277,38 @@ export default function Workspace() {
 
                         <div>
                             <div className="metric-header" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>Entanglement Heatmap</div>
-                            {/* Just a simple visual heatmap for the final step */}
+                            <div className="heatmap-legend"><span>low</span><span>high</span></div>
                             {results.entropies.length > 0 && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <div className="entropy-heatmap">
+                                    <div className="heatmap-axis">step →</div>
                                     {Array.from({ length: numQubits - 1 }).map((_, cutIdx) => {
-                                        const maxEntForThisCut = Math.max(...results.entropies.map((s) => s[cutIdx]));
-                                        const val = maxEntForThisCut;
-                                        const intensity = Math.min(1, val / 1.5); // Normalize approx
                                         return (
-                                            <div key={cutIdx} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                <div style={{ width: '40px', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Cut {cutIdx}:{cutIdx + 1}</div>
-                                                <div style={{ flex: 1, height: '12px', background: 'var(--bg-base)', borderRadius: '6px', overflow: 'hidden' }}>
-                                                    <div style={{
-                                                        height: '100%',
-                                                        width: `${Math.max(2, intensity * 100)}%`,
-                                                        background: `linear-gradient(90deg, var(--accent-primary), #ec4899)`,
-                                                        opacity: intensity + 0.2
-                                                    }}></div>
-                                                </div>
-                                                <div style={{ width: '30px', fontSize: '0.8rem', textAlign: 'right' }}>{val.toFixed(2)}</div>
+                                            <div key={cutIdx} className="heatmap-row" style={{ gridTemplateColumns: `2.7rem repeat(${results.entropies.length}, 0.55rem)` }}>
+                                                <div className="heatmap-label">{cutIdx + 1}|{numQubits - cutIdx - 1}</div>
+                                                {results.entropies.map((step, stepIdx) => {
+                                                    const value = step[cutIdx] ?? 0;
+                                                    const maxPossible = Math.min(cutIdx + 1, numQubits - cutIdx - 1) || 1;
+                                                    const intensity = Math.min(1, value / maxPossible);
+                                                    return <div key={stepIdx} className="heatmap-cell" title={`Step ${stepIdx + 1}, cut ${cutIdx + 1}|${numQubits - cutIdx - 1}: ${value.toFixed(3)} e-bits`} style={{ background: `rgba(124, 58, 237, ${0.08 + intensity * 0.92})` }} />;
+                                                })}
                                             </div>
                                         )
                                     })}
                                 </div>
                             )}
+                            {results.metrics.peakCut > 0 && <p className="metric-help" style={{ marginTop: '0.75rem' }}>The strongest observed correlation crosses cut {results.metrics.peakCut}|{numQubits - results.metrics.peakCut} at step {results.metrics.peakStep}, reaching {results.peakEntropy.toFixed(3)} e-bits.</p>}
+                        </div>
+
+                        <div className="metric-card insight-card">
+                            <div className="metric-header">What this suggests</div>
+                            <p>
+                                {results.metrics.normalizedPeakEntropy >= 0.75
+                                    ? 'Entanglement is close to the selected cut’s maximum. Inspect the gates around the peak step before increasing circuit depth.'
+                                    : results.metrics.twoQubitDensity >= 0.35
+                                        ? 'The circuit is entangling frequently, but the observed cut entropy is moderate. Compare gate placement and layer depth to reduce unnecessary two-qubit work.'
+                                        : 'The circuit remains relatively weakly entangled. This is a useful baseline for checking whether later ansatz layers add meaningful correlations.'}
+                            </p>
+                            <div className="metric-help">Effective Schmidt rank at the peak: {results.metrics.effectiveSchmidtRank.toFixed(2)} (derived from entropy; not an exact rank).</div>
                         </div>
 
                         {/* State Probabilities Visualization */}
@@ -301,6 +343,10 @@ export default function Workspace() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                ) : workerError ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--danger)' }}>
+                        {workerError}
                     </div>
                 ) : (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>

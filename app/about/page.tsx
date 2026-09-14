@@ -35,7 +35,7 @@ export default function AboutPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
                     <div style={{ background: 'var(--bg-panel)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
                         <h3 style={{ color: 'var(--accent-primary)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>Accessible Analysis</h3>
-                        <p style={{ fontSize: '0.95rem' }}>Eliminates the need to install Python toolchains. Anyone can paste OpenQASM or JSON and get immediate physical insights.</p>
+                        <p style={{ fontSize: '0.95rem' }}>Eliminates the need to install Python toolchains. Anyone can paste a small OpenQASM circuit and get immediate physical insights.</p>
                     </div>
                     <div style={{ background: 'var(--bg-panel)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
                         <h3 style={{ color: 'var(--accent-primary)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>Educational Clarity</h3>
@@ -69,8 +69,8 @@ export default function AboutPage() {
                     <li style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                         <span style={{ color: 'var(--accent-primary)', fontSize: '1.5rem' }}>📊</span>
                         <div>
-                            <strong style={{ display: 'block', color: 'var(--text-primary)' }}>Heuristic Hardness Scoring</strong>
-                            A quick reference score measuring how difficult the algorithm is to simulate classically. A high score means the state has massive non-local correlations.
+                            <strong style={{ display: 'block', color: 'var(--text-primary)' }}>Circuit Pressure Indicator</strong>
+                            A transparent comparison aid combining normalized entanglement, entangling-gate density, and estimated depth. It is not a runtime prediction.
                         </div>
                     </li>
                 </ul>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                     This open-source tool was designed and developed by <strong>AxionSoftware Inc</strong>. We strongly believe in the future of the quantum computing community.
                 </p>
                 <p style={{ marginBottom: '1.5rem' }}>
-                    KET Circuit Profiler represents an ongoing effort submitted for the <strong>Unitary Fund microgrant</strong> to encourage open ecosystem tools that prioritize education, accessibility, and robust visualizations that traditional SDKs lack out-of-the-box.
+                    KET Circuit Profiler is being developed as an open ecosystem tool that prioritizes education, accessibility, and robust visualizations that traditional SDKs often lack out-of-the-box. The next milestone is to make its diagnostics reproducible, testable, and useful in real circuit-design workflows.
                 </p>
 
                 <div style={{ marginTop: '4rem', textAlign: 'center', background: 'var(--bg-panel)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-light)' }}>

@@ -16,7 +16,7 @@ export default function Navbar() {
                     </svg>
                     GitHub
                 </a>
-                <a href="https://unitary.fund" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none' }}>Unitary Fund</a>
+                <a href="https://unitary.foundation" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none' }}>Unitary Foundation</a>
             </nav>
         </header>
     );

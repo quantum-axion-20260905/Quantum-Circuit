@@ -8,7 +8,7 @@ export default function Home() {
           Quantum Complexity <br /> Profiler
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
-          Visualize entanglement growth and heuristically estimate classical simulation difficulty — entirely in your browser.
+          Find where entanglement grows, which cut becomes a bottleneck, and what to inspect next — entirely in your browser.
         </p>
       </div>
 

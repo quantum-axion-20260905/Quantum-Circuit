@@ -237,6 +237,48 @@ code,
   border-radius: 4px;
 }
 
+.empty-circuit {
+  color: var(--text-muted);
+  padding: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.diagnostics-panel {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.24);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.82rem;
+}
+
+.diagnostics-title {
+  color: #fbbf24;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.diagnostic {
+  display: flex;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  padding-top: 0.25rem;
+}
+
+.diagnostic span:first-child {
+  color: var(--text-muted);
+  min-width: 3.2rem;
+}
+
+.diagnostic-error span:last-child {
+  color: #fca5a5;
+}
+
+.diagnostic-warning span:last-child {
+  color: #fde68a;
+}
+
 .circuit-wire {
   display: flex;
   align-items: center;
@@ -315,6 +357,35 @@ code,
   margin-bottom: 1rem;
 }
 
+.metrics-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.result-status,
+.metric-help {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.metric-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.compact-card {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.compact-value {
+  font-size: 1.6rem;
+}
+
 .metric-header {
   color: var(--text-secondary);
   font-size: 0.85rem;
@@ -353,11 +424,63 @@ code,
   transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.insight-card {
+  border-color: rgba(124, 58, 237, 0.28);
+  margin-top: 1rem;
+}
+
+.insight-card p {
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-size: 0.86rem;
+}
+
 /* Heatmap Grid */
 .heatmap-grid {
   display: grid;
   gap: 2px;
   margin-top: 1rem;
+}
+
+.heatmap-legend {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+}
+
+.entropy-heatmap {
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+}
+
+.heatmap-axis {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  margin-left: 3rem;
+  margin-bottom: 0.25rem;
+}
+
+.heatmap-row {
+  display: grid;
+  gap: 2px;
+  align-items: center;
+  min-width: max-content;
+  margin-bottom: 2px;
+}
+
+.heatmap-label {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  text-align: right;
+  padding-right: 0.25rem;
+}
+
+.heatmap-cell {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 2px;
 }
 
 .heatmap-cell {
