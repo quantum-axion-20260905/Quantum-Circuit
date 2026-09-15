@@ -5,12 +5,12 @@ export default function AboutPage() {
     return (
         <main style={{ flex: 1, padding: '4rem 2rem', maxWidth: '800px', margin: '0 auto', width: '100%' }} className="animate-fade">
             <h1 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '2rem', background: 'linear-gradient(135deg, #fff, var(--text-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.1 }}>
-                About KET Profiler
+                About EntangleMap
             </h1>
 
             <div style={{ color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1.1rem' }}>
                 <p style={{ marginBottom: '1.5rem', fontSize: '1.25rem', color: 'var(--text-primary)' }}>
-                    Welcome to the <strong>KET (Quantum Entanglement Tracker) Circuit Complexity Profiler</strong>.
+                    Welcome to <strong>EntangleMap</strong>, a browser-based quantum circuit complexity profiler.
                     This tool was built to bridge the gap between abstract quantum circuit design and intuitive physical understanding.
                 </p>
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
 
                 <h2 style={{ fontSize: '2rem', color: 'var(--text-primary)', marginTop: '3rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem' }}>Project Intent & Goals</h2>
                 <p style={{ marginBottom: '1.5rem' }}>
-                    The overarching goal of the KET Profiler is to democratize access to <strong>quantum circuit analysis capabilities</strong> through a zero-installation, browser-based environment.
+                    The overarching goal of EntangleMap is to democratize access to <strong>quantum circuit analysis capabilities</strong> through a zero-installation, browser-based environment.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
                     <div style={{ background: 'var(--bg-panel)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
@@ -49,7 +49,7 @@ export default function AboutPage() {
 
                 <h2 style={{ fontSize: '2rem', color: 'var(--text-primary)', marginTop: '3rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem' }}>How It Benefits the Ecosystem</h2>
                 <p style={{ marginBottom: '1.5rem' }}>
-                    KET Profiler seamlessly integrates real-time physical simulation into an intuitive dashboard:
+                    EntangleMap seamlessly integrates real-time physical simulation into an intuitive dashboard:
                 </p>
                 <ul style={{ listStyle: 'none', paddingLeft: '0', marginBottom: '1.5rem' }}>
                     <li style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                     This open-source tool was designed and developed by <strong>AxionSoftware Inc</strong>. We strongly believe in the future of the quantum computing community.
                 </p>
                 <p style={{ marginBottom: '1.5rem' }}>
-                    KET Circuit Profiler is being developed as an open ecosystem tool that prioritizes education, accessibility, and robust visualizations that traditional SDKs often lack out-of-the-box. The next milestone is to make its diagnostics reproducible, testable, and useful in real circuit-design workflows.
+                    EntangleMap is being developed as an open ecosystem tool that prioritizes education, accessibility, and robust visualizations that traditional SDKs often lack out-of-the-box. The next milestone is to make its diagnostics reproducible, testable, and useful in real circuit-design workflows.
                 </p>
 
                 <div style={{ marginTop: '4rem', textAlign: 'center', background: 'var(--bg-panel)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border-light)' }}>

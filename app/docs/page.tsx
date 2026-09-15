@@ -41,13 +41,13 @@ export default function DocsPage() {
         <main style={{ flex: 1, padding: '4rem 2rem', maxWidth: '900px', margin: '0 auto', width: '100%' }} className="animate-fade">
             <div style={{ marginBottom: '2.5rem' }}>
                 <div style={{ color: 'var(--accent-primary)', fontFamily: 'var(--font-geist-mono), monospace', fontSize: '0.8rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
-                    KET v0.2.0 · User guide
+                    EntangleMap v0.2.0 · User guide
                 </div>
                 <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', background: 'linear-gradient(135deg, #fff, var(--text-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Read your circuit’s story
                 </h1>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', lineHeight: 1.7, maxWidth: '720px' }}>
-                    KET turns a small quantum circuit into an explainable report: where correlation grows, when it peaks, and which structural properties deserve attention next.
+                    EntangleMap turns a small quantum circuit into an explainable report: where correlation grows, when it peaks, and which structural properties deserve attention next.
                 </p>
             </div>
 
@@ -63,11 +63,11 @@ export default function DocsPage() {
                     Choose <strong>Bell</strong>, <strong>GHZ</strong>, <strong>VQE</strong>, or <strong>QAOA</strong> to load an example. For your own circuit, open <strong>View / Edit Code</strong>, paste the input, and watch the report update as you type.
                 </p>
                 <p style={paragraphStyle}>
-                    A useful first experiment is to compare a Bell state with a product-state circuit. The Bell state is only two gates, but its entropy across the first cut reaches one e-bit. That difference is the kind of physical signal KET is designed to make visible.
+                    A useful first experiment is to compare a Bell state with a product-state circuit. The Bell state is only two gates, but its entropy across the first cut reaches one e-bit. That difference is the kind of physical signal EntangleMap is designed to make visible.
                 </p>
 
                 <h2 style={sectionTitleStyle}>2. Input format</h2>
-                <p style={paragraphStyle}>KET accepts a small, explicit subset of OpenQASM 2.0 and a compact pseudo-syntax.</p>
+                <p style={paragraphStyle}>EntangleMap accepts a small, explicit subset of OpenQASM 2.0 and a compact pseudo-syntax.</p>
                 <CodeBlock>{`// Compact syntax
 H 0
 CX 0 1
@@ -96,7 +96,7 @@ swap q[2], q[3];`}</CodeBlock>
 
                 <h2 style={sectionTitleStyle}>3. Input diagnostics</h2>
                 <p style={paragraphStyle}>
-                    KET does not silently discard a malformed line. Unsupported gates, missing operands, invalid angles, and qubits outside the selected register appear with their source line number. Valid lines continue to run, so you can repair a circuit without losing the rest of the analysis.
+                    EntangleMap does not silently discard a malformed line. Unsupported gates, missing operands, invalid angles, and qubits outside the selected register appear with their source line number. Valid lines continue to run, so you can repair a circuit without losing the rest of the analysis.
                 </p>
 
                 <h2 style={sectionTitleStyle}>4. Understanding the report</h2>
@@ -115,7 +115,7 @@ swap q[2], q[3];`}</CodeBlock>
 
                 <h2 style={sectionTitleStyle}>5. What is being calculated?</h2>
                 <p style={paragraphStyle}>
-                    For each valid gate, a Web Worker evolves a complex statevector. For each contiguous cut, KET constructs a reduced density matrix by tracing out the complementary subsystem. The eigenvalues of that matrix are used to calculate Von Neumann entropy:
+                    For each valid gate, a Web Worker evolves a complex statevector. For each contiguous cut, EntangleMap constructs a reduced density matrix by tracing out the complementary subsystem. The eigenvalues of that matrix are used to calculate Von Neumann entropy:
                 </p>
                 <CodeBlock>{`S(rho) = -sum(p_i * log2(p_i))`}</CodeBlock>
                 <p style={{ ...paragraphStyle, marginTop: '1.25rem' }}>
@@ -124,7 +124,7 @@ swap q[2], q[3];`}</CodeBlock>
 
                 <h2 style={sectionTitleStyle}>6. Privacy, limits, and scope</h2>
                 <p style={paragraphStyle}>
-                    There is no backend in the analysis path. However, the application still depends on the browser environment and any hosting layer used to serve the static application. KET itself does not upload circuit source or statevector data.
+                    There is no backend in the analysis path. However, the application still depends on the browser environment and any hosting layer used to serve the static application. EntangleMap itself does not upload circuit source or statevector data.
                 </p>
                 <ul style={{ paddingLeft: '1.4rem', marginBottom: '1.25rem' }}>
                     <li>Maximum selectable width: 10 qubits.</li>

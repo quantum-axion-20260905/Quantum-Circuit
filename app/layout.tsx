@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KET | Quantum Circuit Profiler",
+  title: "EntangleMap | Quantum Circuit Profiler",
   description: "Privacy-first quantum circuit diagnostics for entanglement hotspots, depth, and small-circuit analysis",
 };
 

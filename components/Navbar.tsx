@@ -5,7 +5,7 @@ export default function Navbar() {
     return (
         <header className="header">
             <Link href="/" className="logo cursor-pointer tracking-tight" style={{ textDecoration: 'none' }}>
-                K<span style={{ color: 'var(--text-primary)' }}>ET</span> / Profiler
+                Entangle<span style={{ color: 'var(--text-primary)' }}>Map</span>
             </Link>
             <nav className="nav-links">
                 <Link href="/about" className="text-secondary hover:text-primary transition-colors" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.95rem' }}>About</Link>

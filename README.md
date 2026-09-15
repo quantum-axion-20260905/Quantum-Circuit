@@ -1,14 +1,14 @@
-# KET — Entanglement-Aware Quantum Circuit Diagnostics
+# EntangleMap — Entanglement-Aware Quantum Circuit Diagnostics
 
-**KET v0.2.0** is a privacy-first, browser-based workspace for understanding small quantum circuits. It helps a learner or early-stage developer answer:
+**EntangleMap v0.2.0** is a privacy-first, browser-based workspace for understanding small quantum circuits. It helps a learner or early-stage developer answer:
 
 > Where does entanglement appear in my circuit, and what should I inspect next?
 
-KET runs the analysis locally in your browser. Circuit source and simulated state are not sent to a backend.
+EntangleMap runs the analysis locally in your browser. Circuit source and simulated state are not sent to a backend.
 
-## What KET does
+## What EntangleMap does
 
-Paste a small OpenQASM circuit or use one of the built-in examples. KET then:
+Paste a small OpenQASM circuit or use one of the built-in examples. EntangleMap then:
 
 - simulates the pure state step by step;
 - computes Von Neumann entropy across every contiguous wire cut;
@@ -46,7 +46,7 @@ npm audit --omit=dev --audit-level=high
 
 ## Input syntax
 
-KET supports a documented subset of OpenQASM 2.0 together with a compact pseudo-syntax.
+EntangleMap supports a documented subset of OpenQASM 2.0 together with a compact pseudo-syntax.
 
 ### Compact syntax
 
@@ -108,13 +108,13 @@ It is intentionally transparent and non-rigorous. Use it to compare small circui
 
 ### Effective Schmidt rank
 
-KET reports `2^S` at the peak, where `S` is the peak entropy in bits. This is an entropy-derived indicator, not an exact Schmidt-rank calculation.
+EntangleMap reports `2^S` at the peak, where `S` is the peak entropy in bits. This is an entropy-derived indicator, not an exact Schmidt-rank calculation.
 
 ## Method and architecture
 
 1. The parser converts each valid input line into a typed gate operation.
 2. A Web Worker evolves a `Float64Array` statevector so the UI remains responsive.
-3. For every step and contiguous cut, KET constructs a reduced density matrix.
+3. For every step and contiguous cut, EntangleMap constructs a reduced density matrix.
 4. A Jacobi eigenvalue routine obtains the density-matrix spectrum.
 5. Von Neumann entropy, circuit metrics, final probabilities, and report data are returned to the UI.
 
@@ -142,4 +142,4 @@ See [UNITARY_FOUNDATION_PROPOSAL.md](./UNITARY_FOUNDATION_PROPOSAL.md) for the p
 
 ## License
 
-KET is released under the [MIT License](./LICENSE).
+EntangleMap is released under the [MIT License](./LICENSE).

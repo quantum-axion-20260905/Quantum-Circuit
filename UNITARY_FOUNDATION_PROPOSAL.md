@@ -1,8 +1,8 @@
-# KET: Entanglement-Aware Quantum Circuit Diagnostics
+# EntangleMap: Entanglement-Aware Quantum Circuit Diagnostics
 
 ## One-sentence summary
 
-KET is a privacy-first, browser-based open-source tool that helps quantum learners and early-stage developers find where entanglement grows in a circuit, understand the resulting bottleneck, and export a reproducible analysis report without installing a Python stack or sending circuit data to a server.
+EntangleMap is a privacy-first, browser-based open-source tool that helps quantum learners and early-stage developers find where entanglement grows in a circuit, understand the resulting bottleneck, and export a reproducible analysis report without installing a Python stack or sending circuit data to a server.
 
 ## The problem
 
@@ -12,7 +12,7 @@ Existing SDKs and simulators are valuable, but they generally assume a local pro
 
 ## The proposed project
 
-KET turns a small circuit into an actionable diagnostic:
+EntangleMap turns a small circuit into an actionable diagnostic:
 
 - parse a documented subset of OpenQASM 2.0 with line-level errors;
 - simulate the pure state locally in a Web Worker;
@@ -69,7 +69,7 @@ The repository already contains a working browser prototype with:
 
 The project is MIT-licensed and designed to be useful without a paid service, account, or cloud backend. The report format and reference circuits will make it easier for educators and contributors to share reproducible examples. The implementation is deliberately small enough for new contributors to understand, while the documentation will make the mathematical assumptions visible instead of hiding them behind a single score.
 
-KET complements general-purpose simulators and SDKs: those tools execute and optimize circuits; KET explains where a small circuit becomes correlated and gives a learner or developer a concrete next question.
+EntangleMap complements general-purpose simulators and SDKs: those tools execute and optimize circuits; EntangleMap explains where a small circuit becomes correlated and gives a learner or developer a concrete next question.
 
 ## Proposed use of a $4,000 microgrant
 
